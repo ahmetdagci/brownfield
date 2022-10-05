@@ -8,10 +8,10 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.brownfield.pss.book.client.FareService;
 import com.brownfield.pss.book.entity.BookingRecord;
 import com.brownfield.pss.book.entity.Inventory;
 import com.brownfield.pss.book.entity.Passenger;
@@ -23,21 +23,22 @@ public class BookingComponent {
 	private static final Logger logger = LoggerFactory.getLogger(BookingComponent.class);
 	private static final String FareURL = "http://localhost:8080/fares";
 	
-	BookingRepository bookingRepository;
-	InventoryRepository inventoryRepository;
-	
-	//@Autowired
+	private final BookingRepository bookingRepository;
+	private final InventoryRepository inventoryRepository;
+	private final Sender sender;
+	private final FareService fareService;
 	private RestTemplate restTemplate;
-	
-	Sender sender;
 
-	@Autowired
 	public BookingComponent (BookingRepository bookingRepository,
-					  Sender sender,InventoryRepository inventoryRepository){
+					  Sender sender,
+					  InventoryRepository inventoryRepository,
+					  FareService fareService){
 		this.bookingRepository = bookingRepository;
 		this.restTemplate = new RestTemplate();
 		this.sender = sender;
 		this.inventoryRepository = inventoryRepository;
+		this.fareService = fareService;
+				
 	}
 	public long book(BookingRecord record) {
 		logger.info("calling fares to get fare");
@@ -48,6 +49,14 @@ public class BookingComponent {
 		if (!record.getFare().equals(fare.getFare()))
 			throw new BookingException("fare is tampered");
 		logger.info("calling inventory to get inventory");
+		
+		fare = fareService.getFare(record.getFlightNumber(),record.getFlightDate());
+		logger.info("calling fares to get fare "+ fare);
+		//check fare
+		if (!record.getFare().equals(fare.getFare()))
+			throw new BookingException("fare is tampered");
+		logger.info("calling inventory to get inventory");
+		
 		//check inventory
 		Inventory inventory = inventoryRepository.findByFlightNumberAndFlightDate(record.getFlightNumber(),record.getFlightDate());
 		if(!inventory.isAvailable(record.getPassengers().size())){

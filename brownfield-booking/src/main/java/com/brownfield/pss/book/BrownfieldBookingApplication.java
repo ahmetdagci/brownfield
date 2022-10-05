@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import com.brownfield.pss.book.component.BookingComponent;
 import com.brownfield.pss.book.entity.BookingRecord;
@@ -21,6 +22,7 @@ import com.brownfield.pss.book.repository.BookingRepository;
 import com.brownfield.pss.book.repository.InventoryRepository;
 
 @SpringBootApplication
+@EnableFeignClients
 public class BrownfieldBookingApplication implements CommandLineRunner{
 	private static final Logger logger = LoggerFactory.getLogger(BrownfieldBookingApplication.class);
 	@Autowired

@@ -1,0 +1,2 @@
+#call the book micro service
+http://localhost:9090/booking/get/8

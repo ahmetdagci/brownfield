@@ -1,0 +1,12 @@
+after starting docker from docker-compose.yaml
+
+step 1: docker exec -it sn-kafka /bin/bash
+
+step 2: 
+kafka-topics --bootstrap-server localhost:9092 \
+--create --topic java_topic_3 \
+--partitions 2 \
+--replication-factor 1
+
+
+step 3: kafka-console-producer --broker-list localhost:9092 --topic java_topic_3

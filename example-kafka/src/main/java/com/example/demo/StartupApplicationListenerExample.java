@@ -38,7 +38,7 @@ public class StartupApplicationListenerExample implements  ApplicationListener<C
     	Consumer<String, String> consumer = new KafkaConsumer<>(properties);
     	
     	consumer.subscribe(Collections.singleton("java_topic_3"));
-
+/*
     	while (true) {
     	    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
 
@@ -47,6 +47,6 @@ public class StartupApplicationListenerExample implements  ApplicationListener<C
     	    }
     	    consumer.commitAsync();
     	}
-    
+  */  
     }
 }

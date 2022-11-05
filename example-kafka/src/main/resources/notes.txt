@@ -10,3 +10,43 @@ kafka-topics --bootstrap-server localhost:9092 \
 
 
 step 3: kafka-console-producer --broker-list localhost:9092 --topic java_topic_3
+
+
+
+#######################################################################################################
+
+run Kafka server and Zookeeper using docker-compose.
+change directory where file docker-compose.yaml is located and then run command below.
+  
+docker-compose up -d
+
+output should be like this
+
+$ docker-compose ps
+    Name                Command            State              Ports
+-------------------------------------------------------------------------------
+sn-kafka       /etc/confluent/docker/run   Up      0.0.0.0:9092->9092/tcp
+sn-zookeeper   /etc/confluent/docker/run   Up      2181/tcp, 2888/tcp, 3888/tcp
+
+
+Create a topic
+
+step 1: docker exec -it sn-kafka /bin/bash
+step 2: kafka-topics --bootstrap-server localhost:9092 \
+--create --topic first_topic \
+--partitions 1 \
+--replication-factor 1
+
+step 3: kafka-topics --bootstrap-server localhost:9092 --list
+
+Produce messages
+step 1: kafka-console-producer --broker-list localhost:9092 --topic first_topic
+>
+
+
+Consuming messages
+step 1: docker exec -it sn-kafka /bin/bash
+step 2: kafka-console-consumer --bootstrap-server localhost:9092 \
+--topic first_topic \
+--from-beginning
+
